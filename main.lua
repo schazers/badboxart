@@ -117,13 +117,13 @@ function drawBg()
   local botLeftDiag = { 0, gScreenHeight, hw - hw * gkBackWallScaleFactor, hh + hh * gkBackWallScaleFactor, }
 
 
-  local z = Ball:getZ()
+  -- outline on wall at ball's depth location
+  local scaledZ = (Ball:getZ())^(3/4)
 
-  -- for outline at ball's location
-  local outlineLeft = lerp(0, hw - hw * gkBackWallScaleFactor, z)
-  local outlineTop = lerp(0, hh - hh * gkBackWallScaleFactor, z)
-  local outlineRight = lerp(gScreenWidth, hw + hw * gkBackWallScaleFactor, z)
-  local outlineBottom = lerp(gScreenHeight, hh + hh * gkBackWallScaleFactor, z)
+  local outlineLeft = lerp(0, hw - hw * gkBackWallScaleFactor, scaledZ)
+  local outlineTop = lerp(0, hh - hh * gkBackWallScaleFactor, scaledZ)
+  local outlineRight = lerp(gScreenWidth, hw + hw * gkBackWallScaleFactor, scaledZ)
+  local outlineBottom = lerp(gScreenHeight, hh + hh * gkBackWallScaleFactor, scaledZ)
 
   local outlineCorners = {
     outlineLeft, outlineTop,

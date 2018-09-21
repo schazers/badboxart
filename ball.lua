@@ -28,9 +28,10 @@ end
 function Ball:draw(screenWidth, screenHeight) 
   love.graphics.setColor(1,1,1,1)
   -- scale ball position and radius based upon z-value for psuedo3D render
-  love.graphics.circle("fill", (screenWidth / 2.0) + ((screenWidth / 2.0) * ((0.75 * (1.0 - self.z)) + 0.25) * self.x),
-                               (screenHeight / 2.0) + ((screenHeight / 2.0) * ((0.75 * (1.0 - self.z)) + 0.25) * self.y),
-                                (self.radius * screenWidth) * (0.75 * (1.0 - self.z) + 0.25), -- radius
+  local scaledZ = self.z^(3/4)
+  love.graphics.circle("fill", (screenWidth / 2.0) + ((screenWidth / 2.0) * ((0.75 * (1.0 - scaledZ)) + 0.25) * self.x),
+                               (screenHeight / 2.0) + ((screenHeight / 2.0) * ((0.75 * (1.0 - scaledZ)) + 0.25) * self.y),
+                                (self.radius * screenWidth) * (0.75 * (1.0 - scaledZ) + 0.25), -- radius
                                 100)                                                -- cirle segments
 end
 
