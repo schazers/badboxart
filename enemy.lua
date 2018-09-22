@@ -88,13 +88,15 @@ end
 function Enemy:advanceToNextEnemy(newGameStage)
   if newGameStage == 1 then
     self.movementSpeed = 0.9
-    self.lives = 10
-  elseif newGameStage == 2 then 
+    self.lives = 3
+  elseif newGameStage == 2 then
+    self.img = love.graphics.newImage("assets/img/frogface.png")
     self.movementSpeed = 1.6
-    self.lives = 10
+    self.lives = 3
   elseif newGameStage == 3 then
+    self.img = love.graphics.newImage("assets/img/voidface.png")
     self.movementSpeed = 2.0
-    self.lives = 10
+    self.lives = 3
   end 
   -- TODO: increase difficulty properly
   
