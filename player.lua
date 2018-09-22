@@ -27,21 +27,9 @@ function Player:draw(screenWidth, screenHeight)
                                   20)
 end
 
-function Player:getWidth()
-  return self.size
-end
-
-function Player:getHeight()
-  return self.size
-end
-
 function Player:getAABB()
-  return { x = self.x - self.size/2.0, y = self.y - self.size/2.0, w = self.size, h = self.size }
+  return { x = self.x - self.size * 2.0, y = self.y - self.size * 2.0, w = self.size * 4.0, h = self.size * 4.0 }
 end
-
-function Player:getX() return self.x end
-function Player:getY() return self.y end
-function Player:getZ() return self.z end
 
 function Player:setCenterPos(centerX, centerY)
   self.prevX = self.x

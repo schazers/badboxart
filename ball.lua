@@ -26,7 +26,7 @@ function Ball:reset()
 end
 
 function Ball:draw(screenWidth, screenHeight) 
-  love.graphics.setColor(1,1,1,1)
+  love.graphics.setColor(1.0,0.4,0.4,1)
   -- scale ball position and radius based upon z-value for psuedo3D render
   local scaledZ = self.z^(3/4)
   love.graphics.circle("fill", (screenWidth / 2.0) + ((screenWidth / 2.0) * ((0.75 * (1.0 - scaledZ)) + 0.25) * self.x),
@@ -112,16 +112,31 @@ function Ball:update(dt)
 end
 
 function Ball:getAABB() 
-  return { x = self.x - self.radius, y = self.y - self.radius, w = self.radius * 2, h = self.radius * 2 }
+  return { x = self.x - self.radius * 2.0, y = self.y - self.radius * 2.0, w = self.radius * 4, h = self.radius * 4 }
 end
 
 function Ball:handlePlayerTouch(motionDelta)
-  -- TODO: user Dx, Dy to spin ball
-  self.ax = self.ax - motionDelta.dx * 50
-  self.ay = self.ay - motionDelta.dy * 50
 
-  print(self.ax)
-  print(self.ay)
+  -- simulate friction to slow spin amount
+  self.ax = 0.75 * self.ax
+  self.ay = 0.75 * self.ay
+
+  -- add spin
+  local axDelta = - motionDelta.dx * 50
+  local ayDelta = - motionDelta.dy * 50
+
+  -- reverse ball's spin if new spin is in other direction
+  if (axDelta < 0 and self.ax > 0) or (axDelta > 0 and self.ax < 0) then
+    self.ax = axDelta
+  else
+    self.ax = self.ax + axDelta
+  end
+
+  if (ayDelta < 0 and self.ay > 0) or (ayDelta > 0 and self.ay < 0) then
+    self.ay = ayDelta
+  else
+    self.ay = self.ay + ayDelta
+  end
 
   local newZ = 0.0 + 0.01
   self.z = newZ

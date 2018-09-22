@@ -5,14 +5,17 @@ Sound = require 'sound'
 local lerp = require "math.lerp"
 local clamp = require "math.clamp"
 
---------------------
--- Game Constants
---------------------
-gGameStarted = false
+-- offset from top left of game window
+gGameOffset = {
+  x = 100,
+  y = 100
+}
 
 gScreenWidth = 624
 gScreenHeight = 416
 gkBackWallScaleFactor = 0.25
+
+gGameStarted = false
 
 function love.load()
   math.randomseed(os.time())
@@ -25,6 +28,9 @@ function love.load()
   -- images
   --gImgTitleScreen1 = love.graphics.newImage("title_screen_1.png")
 
+  gImgBg = love.graphics.newImage("assets/img/bg.png")
+
+  Enemy:init()
   Sound:init()
 end
 
@@ -38,7 +44,6 @@ function startGame()
   gGameStarted = true
 end
 
-
 function love.update(dt)
   if not gGameStarted then
     -- TODO
@@ -50,8 +55,8 @@ end
 
 function updateGame(dt)
   Player:update(dt)
-  Enemy:update(dt)
   Ball:update(dt)
+  Enemy:update(dt, Ball:getPos())
 
   if Ball:getZ() < 0.0 then
     local b = Ball:getAABB()
@@ -60,7 +65,6 @@ function updateGame(dt)
       Ball:handlePlayerTouch(Player:getMotionDelta())
       Sound:play(Sound.sndHit, 1.0)
     else
-      print("lost point")
       Ball:triggerLostPoint()
       Player:triggerLostPoint()
       Enemy:triggerWonPoint()
@@ -74,7 +78,6 @@ function updateGame(dt)
       Ball:handleEnemyTouch(Enemy:getMotionDelta())
       Sound:play(Sound.sndHit, 1.2)
     else
-      print("won point")
       Ball:triggerWonPoint()
       Player:triggerWonPoint()
       Enemy:triggerLostPoint()
@@ -91,7 +94,7 @@ function checkAABBCollision(x1,y1,w1,h1, x2,y2,w2,h2)
          y2 < y1+h1
 end
 
-function drawBg()
+function drawWallBallOutline()
   local frontCorners = {
     0, 0,
     gScreenWidth, 0,
@@ -133,15 +136,15 @@ function drawBg()
     outlineLeft, outlineTop,
   }
 
-  love.graphics.setColor(0.4, 1.0, 0.4, 1.0)
+  -- love.graphics.setColor(0.4, 1.0, 0.4, 1.0)
 
-  love.graphics.line(frontCorners)
-  love.graphics.line(backCorners)
+  -- love.graphics.line(frontCorners)
+  -- love.graphics.line(backCorners)
 
-  love.graphics.line(topLeftDiag)
-  love.graphics.line(topRightDiag)
-  love.graphics.line(botRightDiag)
-  love.graphics.line(botLeftDiag)
+  -- love.graphics.line(topLeftDiag)
+  -- love.graphics.line(topRightDiag)
+  -- love.graphics.line(botRightDiag)
+  -- love.graphics.line(botLeftDiag)
 
   love.graphics.setColor(0.4, 1.0, 1.0, 1.0)
 
@@ -156,10 +159,19 @@ function love.draw()
     -- title screen? hiscore?
   end
 
-  drawBg()
+  love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
+  love.graphics.draw(gImgBg, 0, 0)
+
+  love.graphics.push()
+  love.graphics.translate(gGameOffset.x, gGameOffset.y)
+
+  drawWallBallOutline()
+
   Enemy:draw(gScreenWidth, gScreenHeight)
   Ball:draw(gScreenWidth, gScreenHeight)
   Player:draw(gScreenWidth, gScreenHeight)
+
+  love.graphics.pop()
 
   drawHUD()
 end
@@ -179,7 +191,6 @@ function love.mousepressed(x, y, button)
     return
   end
 
-  
   if button == 1 then
     Ball:tryToServe(Player:getMotionDelta())
     Sound:play(Sound.sndHit, 1.0)
@@ -187,8 +198,8 @@ function love.mousepressed(x, y, button)
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
-  local screenX = clamp(x, 0, gScreenWidth)
-  local screenY = clamp(y, 0, gScreenHeight)
+  local screenX = clamp(x - gGameOffset.x, 0, gScreenWidth)
+  local screenY = clamp(y - gGameOffset.y, 0, gScreenHeight)
   local worldX = (screenX / gScreenWidth) * 2.0 - 1.0
   local worldY = (screenY / gScreenHeight) * 2.0 - 1.0
   Player:setCenterPos(worldX, worldY) 
