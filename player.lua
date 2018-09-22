@@ -35,6 +35,15 @@ function Player:draw(screenWidth, screenHeight)
                                   self.size * screenWidth * 0.1,
                                   self.size * screenHeight * 0.1,
                                   20)
+
+  love.graphics.setColor(1,1,1,1)
+  love.graphics.rectangle("line", ((self.x + 1) / 2.0) * screenWidth - (self.size/2.0) * screenWidth,
+                                  ((self.y + 1) / 2.0) * screenHeight - (self.size/2.0) * screenHeight, 
+                                  screenWidth * self.size, 
+                                  screenHeight * self.size,
+                                  self.size * screenWidth * 0.1,
+                                  self.size * screenHeight * 0.1,
+                                  20)
 end
 
 function Player:getAABB()
