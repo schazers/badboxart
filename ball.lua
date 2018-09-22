@@ -126,8 +126,8 @@ function Ball:handlePlayerTouch(motionDelta)
   self.ay = 0.75 * self.ay
 
   -- add spin
-  local axDelta = - motionDelta.dx * 50
-  local ayDelta = - motionDelta.dy * 50
+  local axDelta = - motionDelta.dx * 130
+  local ayDelta = - motionDelta.dy * 130
 
   -- reverse ball's spin if new spin is in other direction
   if (axDelta < 0 and self.ax > 0) or (axDelta > 0 and self.ax < 0) then
