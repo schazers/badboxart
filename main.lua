@@ -32,6 +32,7 @@ function love.load()
 
   Enemy:init()
   Sound:init()
+  Sound:play(Sound.sndAmbience)
 end
 
 function startGame()
@@ -125,7 +126,7 @@ function drawWallBallOutline()
 
 
   -- outline on wall at ball's depth location
-  local scaledZ = (Ball:getZ())^(3/4)
+  local scaledZ = (Ball:getZ())^(2/3)
 
   local outlineLeft = lerp(0, hw - hw * gkBackWallScaleFactor, scaledZ)
   local outlineTop = lerp(0, hh - hh * gkBackWallScaleFactor, scaledZ)
@@ -150,7 +151,7 @@ function drawWallBallOutline()
   -- love.graphics.line(botRightDiag)
   -- love.graphics.line(botLeftDiag)
 
-  love.graphics.setColor(0.4, 1.0, 1.0, 1.0)
+  love.graphics.setColor(0.55, 1.0, 0.4, 1.0)
 
   love.graphics.line(outlineCorners)
 end
