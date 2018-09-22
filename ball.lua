@@ -59,7 +59,7 @@ function Ball:tryToServe(motionDelta)
   
   self:handlePlayerTouch(motionDelta)
 
-  Sound:play(Sound.sndHit, 1.0)
+  Sound:play(Sound.sndPlayerHit)
 
   self.state = "playing"
 end
@@ -143,7 +143,7 @@ function Ball:handlePlayerTouch(motionDelta)
   local newZ = 0.0 + 0.01
   self.z = newZ
   if self.state == "ready" then
-    self.vz = 0.8
+    self.vz = 1.0
   elseif self.state == "playing" then 
     self.vz = -self.vz
   end

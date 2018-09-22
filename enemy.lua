@@ -11,7 +11,7 @@ Enemy = {
   prevY = 0,
   size = 0.2,
   img = nil,
-  movementSpeed = 0.4
+  movementSpeed = 0.7
 }
 
 function Enemy:init()
@@ -19,7 +19,11 @@ function Enemy:init()
 end
 
 function Enemy:reset()
-  self:setCenterPos(0.1, 0.1)
+  self:setCenterPos(0, 0)
+  self.dx = 0
+  self.dy = 0
+  self.prevX = 0
+  self.prevY = 0
 end
 
 function Enemy:getAABB()
