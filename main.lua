@@ -56,33 +56,35 @@ end
 function updateGame(dt)
   Player:update(dt)
   Ball:update(dt)
-  Enemy:update(dt, Ball:getPos())
+  Enemy:update(dt, Ball:getPos(), Ball:getState())
 
-  if Ball:getZ() < 0.0 then
-    local b = Ball:getAABB()
-    local p = Player:getAABB()
-    if checkAABBCollision(b.x, b.y, b.w, b.h, p.x, p.y, p.w, p.h) then 
-      Ball:handlePlayerTouch(Player:getMotionDelta())
-      Sound:play(Sound.sndHit, 1.0)
-    else
-      Ball:triggerLostPoint()
-      Player:triggerLostPoint()
-      Enemy:triggerWonPoint()
+  if Ball:getState() == "playing" then
+    if Ball:getZ() < 0.0 then
+      local b = Ball:getAABB()
+      local p = Player:getAABB()
+      if checkAABBCollision(b.x, b.y, b.w, b.h, p.x, p.y, p.w, p.h) then 
+        Ball:handlePlayerTouch(Player:getMotionDelta())
+        Sound:play(Sound.sndHit, 1.0)
+      else
+        Ball:triggerLostPoint()
+        Player:triggerLostPoint()
+        Enemy:triggerWonPoint()
+      end
     end
-  end
-
-  if Ball:getZ() > 1.0 then 
-    local b = Ball:getAABB()
-    local e = Enemy:getAABB()
-    if checkAABBCollision(b.x, b.y, b.w, b.h, e.x, e.y, e.w, e.h) then 
-      Ball:handleEnemyTouch(Enemy:getMotionDelta())
-      Sound:play(Sound.sndHit, 1.2)
-    else
-      Ball:triggerWonPoint()
-      Player:triggerWonPoint()
-      Enemy:triggerLostPoint()
+  
+    if Ball:getZ() > 1.0 then 
+      local b = Ball:getAABB()
+      local e = Enemy:getAABB()
+      if checkAABBCollision(b.x, b.y, b.w, b.h, e.x, e.y, e.w, e.h) then 
+        Ball:handleEnemyTouch(Enemy:getMotionDelta())
+        Sound:play(Sound.sndHit, 1.2)
+      else
+        Ball:triggerWonPoint()
+        Player:triggerWonPoint()
+        Enemy:triggerLostPoint()
+      end
     end
-  end
+  end 
 
   -- TODO: check whether player/enemy won/lost match
 end
@@ -193,7 +195,6 @@ function love.mousepressed(x, y, button)
 
   if button == 1 then
     Ball:tryToServe(Player:getMotionDelta())
-    Sound:play(Sound.sndHit, 1.0)
   end
 end
 

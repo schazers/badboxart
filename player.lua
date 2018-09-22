@@ -51,4 +51,8 @@ function Player:triggerLostPoint()
   -- TODO: anything?
 end
 
+function Player:triggerWonPoint()
+  -- TODO: anything?
+end
+
 return Player

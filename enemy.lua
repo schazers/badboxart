@@ -11,6 +11,7 @@ Enemy = {
   prevY = 0,
   size = 0.2,
   img = nil,
+  movementSpeed = 0.4
 }
 
 function Enemy:init()
@@ -18,8 +19,7 @@ function Enemy:init()
 end
 
 function Enemy:reset()
-  self.x = 0
-  self.y = 0
+  self:setCenterPos(0.1, 0.1)
 end
 
 function Enemy:getAABB()
@@ -42,13 +42,32 @@ function Enemy:setCenterPos(centerX, centerY)
   self.y = clamp(centerY, -1.0 + self.size, 1.0 - self.size) 
 end
 
-function Enemy:update(dt, ballPos)
+function Enemy:update(dt, ballPos, ballState)
   -- TODO: move at this particular enemy's speed towards the ball each frame
-  -- compute and set Dx, Dy to spin the ball
+  -- compute (and set Dx, Dy to spin the ball?)
+
+  if ballState == "playing" then 
+    local dx = ballPos.x - self.x
+    local dy = ballPos.y - self.y
+
+    local mag = math.sqrt(dx * dx + dy * dy)
+
+    if mag > 0.01 then 
+      print(mag)
+
+      local nx = dx / mag
+      local ny = dy / mag
+
+      self.x = self.x + (nx * dt * self.movementSpeed)
+      self.y = self.y + (ny * dt * self.movementSpeed)
+    end
+  end
+
+  -- TODO: if ball is moving towards player, enemy should move back towards center
 
   -- TEST: cheat for now, just be where the ball is:
-  self.x = ballPos.x
-  self.y = ballPos.y
+  --self.x = ballPos.x
+  --self.y = ballPos.y
 end
 
 function Enemy:getMotionDelta() return { dx = self.dx, dy = self.dy } end

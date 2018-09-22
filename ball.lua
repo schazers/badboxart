@@ -10,7 +10,8 @@ Ball = {
   vz = 0,
   ax = 0,
   ay = 0,
-  state = "ready"
+  state = "ready",
+  timeSincePointEnded = 0
 }
 
 function Ball:reset()
@@ -23,10 +24,18 @@ function Ball:reset()
   self.ax = 0
   self.ay = 0
   self.state = "ready"
+  self.timeSincePointEnded = 0
 end
 
 function Ball:draw(screenWidth, screenHeight) 
-  love.graphics.setColor(1.0,0.4,0.4,1)
+  if self.state == "playing" or self.state == "ready" then
+    love.graphics.setColor(1.0,0.4,0.4,1)
+  elseif self.state == "lostpoint" then
+    love.graphics.setColor(0.5,0.2,0.2,1)
+  elseif self.state == "wonpoint" then
+    love.graphics.setColor(0.4,1.0,0.4,1)
+  end
+  
   -- scale ball position and radius based upon z-value for psuedo3D render
   local scaledZ = self.z^(3/4)
   love.graphics.circle("fill", (screenWidth / 2.0) + ((screenWidth / 2.0) * ((0.75 * (1.0 - scaledZ)) + 0.25) * self.x),
@@ -50,6 +59,8 @@ function Ball:tryToServe(motionDelta)
   
   self:handlePlayerTouch(motionDelta)
 
+  Sound:play(Sound.sndHit, 1.0)
+
   self.state = "playing"
 end
 
@@ -59,11 +70,12 @@ end
 
 function Ball:update(dt)
   if self.state == "ready" then
-    -- TODO
-  elseif self.state == "wonpoint" then
-    -- TODO
-  elseif self.state == "lostpoint" then
-    -- TODO
+    -- todo? wiggle ball?
+  elseif self.state == "wonpoint" or self.state == "lostpoint" then
+    self.timeSincePointEnded = self.timeSincePointEnded + dt
+    if self.timeSincePointEnded > 1.4 then
+      self:reset()
+    end
   elseif self.state == "playing" then
     local newX = self.x + self.vx * dt
     local newY = self.y + self.vy * dt
@@ -91,21 +103,11 @@ function Ball:update(dt)
       Sound:play(Sound.sndBounce)
     end
 
-    -- TODO: remove and use paddles for depth-collisions
-    -- if newZ < 0.0 then
-    --   newZ = 0.0 + 0.01
-    --   self.vz = -self.vz
-    -- elseif newZ > 1.0 then
-    --   newZ = 1.0 - 0.01
-    --   self.vz = -self.vz
-    -- end
-    -- TODO: ^^^ ===========================
-
     self.x = newX
     self.y = newY
     self.z = newZ
 
-    -- TODO: clamp max x, y velocities so acceleration can't get out of hand
+    -- TODO: clamp max x, y velocities so acceleration can't get out of hand?
     self.vx = self.vx + self.ax * dt
     self.vy = self.vy + self.ay * dt
   end
@@ -148,7 +150,7 @@ function Ball:handlePlayerTouch(motionDelta)
 end
 
 function Ball:handleEnemyTouch(motionDelta)
-  -- TODO: use Dx, Dy to spin ball
+  -- TODO: use Dx, Dy to spin ball?
   local newZ = 1.0 - 0.01
   self.vz = -self.vz
   self.z = newZ
@@ -156,14 +158,14 @@ end
 
 function Ball:triggerLostPoint()
   self.state = "lostpoint"
-  -- TODO: let lostpoint animation happen before reset
-  self:reset()
+  self.timeSincePointEnded = 0
+  self.z = 0 -- so the ball will render properly before reset
 end
 
-function Ball:triggerWonPoint()  
+function Ball:triggerWonPoint()
   self.state = "wonpoint"
-  -- TODO: let wonpoint animation happen before reset
-  self:reset()
+  self.timeSincePointEnded = 0
+  self.z = 1.0 
 end
 
 function Ball:getPos() return { x = self.x, y = self.y, z = self.z } end
