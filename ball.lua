@@ -31,7 +31,8 @@ end
 
 function Ball:draw(screenWidth, screenHeight) 
   if self.state == "playing" or self.state == "ready" then
-    love.graphics.setColor(1.0,0.4,0.4,1)
+    local factor = (1.0 - self.z)
+    love.graphics.setColor(0.7 + factor * 0.3,0.3 + 0.1 * factor,0.3 + 0.1 * factor,1)
   elseif self.state == "lostpoint" then
     love.graphics.setColor(0.5,0.2,0.2,1)
   elseif self.state == "wonpoint" then
@@ -43,7 +44,7 @@ function Ball:draw(screenWidth, screenHeight)
   love.graphics.circle("fill", (screenWidth / 2.0) + ((screenWidth / 2.0) * ((0.75 * (1.0 - scaledZ)) + 0.25) * self.x),
                                (screenHeight / 2.0) + ((screenHeight / 2.0) * ((0.75 * (1.0 - scaledZ)) + 0.25) * self.y),
                                 (self.radius * screenWidth) * (0.75 * (1.0 - scaledZ) + 0.25), -- radius
-                                100)                                                -- cirle segments
+                                100)                                                           -- cirle segments
 end
 
 -- in range [0.0, 1.0], where 0.0 is closest, 1.0 is furthest
