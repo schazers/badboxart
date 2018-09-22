@@ -38,6 +38,7 @@ function love.load()
   Sound:play(Sound.sndAmbience)
 
   Enemy:advanceToNextEnemy(gGameStage)
+  Ball:advanceToStage(gGameStage)
 end
 
 function startGame()
@@ -97,6 +98,7 @@ function updateGame(dt)
       -- TODO: won entire game
     else 
       Enemy:advanceToNextEnemy(gGameStage)
+      Ball:advanceToStage(gGameStage)
     end
   elseif Player.lives < 1 then
     -- TODO: game over

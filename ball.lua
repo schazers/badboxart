@@ -12,7 +12,8 @@ Ball = {
   ax = 0,
   ay = 0,
   state = "ready",
-  timeSincePointEnded = 0
+  currStageVz = 1.2,
+  timeSincePointEnded = 0,
 }
 
 function Ball:reset()
@@ -21,7 +22,7 @@ function Ball:reset()
   self.z = 0
   self.vx = 0
   self.vy = 0
-  self.vz = 0
+  self.vz = self.currStageVz
   self.ax = 0
   self.ay = 0
   self.state = "ready"
@@ -144,12 +145,22 @@ function Ball:handlePlayerTouch(motionDelta)
   local newZ = 0.0 + 0.01
   self.z = newZ
   if self.state == "ready" then
-    self.vz = 1.2
+    self.vz = self.currStageVz
   elseif self.state == "playing" then 
     self.vz = -self.vz
   end
 
   Player:triggerHitBall()
+end
+
+function Ball:advanceToStage(newGameStage)
+  if newGameStage == 1 then
+    self.currStageVz = 1.2
+  elseif newGameStage == 2 then 
+    self.currStageVz = 1.5
+  elseif newGameStage == 3 then
+    self.currStageVz = 1.8
+  end
 end
 
 function Ball:handleEnemyTouch(motionDelta)
