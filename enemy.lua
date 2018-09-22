@@ -80,18 +80,20 @@ function Enemy:triggerWonPoint(gameStage)
     self.movementSpeed = self.movementSpeed + 0.5
   elseif gameStage == 2 then
     self.movementSpeed = self.movementSpeed + 0.3
-  end
+  elseif gameStage == 3 then
+    self.movementSpeed = self.movementSpeed + 0.2
+  end 
 end
 
 function Enemy:advanceToNextEnemy(newGameStage)
   if newGameStage == 1 then
-    self.movementSpeed = 0.7
+    self.movementSpeed = 0.9
     self.lives = 10
   elseif newGameStage == 2 then 
-    self.movementSpeed = 1.3
+    self.movementSpeed = 1.6
     self.lives = 10
   elseif newGameStage == 3 then
-    self.movementSpeed = 1.5
+    self.movementSpeed = 2.0
     self.lives = 10
   end 
   -- TODO: increase difficulty properly
