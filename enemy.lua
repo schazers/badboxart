@@ -58,8 +58,6 @@ function Enemy:update(dt, ballPos, ballState)
     local mag = math.sqrt(dx * dx + dy * dy)
 
     if mag > 0.01 then 
-      print(mag)
-
       local nx = dx / mag
       local ny = dy / mag
 
@@ -77,14 +75,23 @@ end
 
 function Enemy:getMotionDelta() return { dx = self.dx, dy = self.dy } end
 
-function Enemy:triggerWonPoint()
-  -- TODO
+function Enemy:triggerWonPoint(gameStage)
+  if gameStage == 1 then
+    self.movementSpeed = self.movementSpeed + 0.5
+  elseif gameStage == 2 then
+    self.movementSpeed = self.movementSpeed + 0.3
+  end
 end
 
-function Enemy:advanceToNextEnemy()
+function Enemy:advanceToNextEnemy(newGameStage)
   self.lives = 10
+  if newGameStage == 1 then
+    self.movementSpeed = 0.7
+  elseif newGameStage == 2 then 
+    self.movementSpeed = 1.3
+  end 
   -- TODO: increase difficulty properly
-  self.movementSpeed = self.movementSpeed + 0.2
+  
 end
 
 function Enemy:triggerLostPoint()

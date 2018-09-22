@@ -18,6 +18,7 @@ gkBackWallScaleFactor = 0.25
 gGameStarted = false
 
 gGameStage = 1
+gkTotalNumStages = 2
 
 function love.load()
   math.randomseed(os.time())
@@ -35,15 +36,13 @@ function love.load()
   Enemy:init()
   Sound:init()
   Sound:play(Sound.sndAmbience)
+
+  Enemy:advanceToNextEnemy(gGameStage)
 end
 
 function startGame()
-  -- todo: position ball
-  -- todo: give player lives
-
   Ball:reset()
   Player:reset()
-
   gGameStarted = true
 end
 
@@ -74,7 +73,7 @@ function updateGame(dt)
       else
         Ball:triggerLostPoint()
         Player:triggerLostPoint()
-        Enemy:triggerWonPoint()
+        Enemy:triggerWonPoint(gGameStage)
       end
     end
   
@@ -92,7 +91,16 @@ function updateGame(dt)
     end
   end
 
-  -- TODO: check whether player/enemy won/lost match
+  if Enemy.lives < 1 then 
+    gGameStage = gGameStage + 1
+    if gGameStage > gkTotalNumStages then
+      -- TODO: won entire game
+    else 
+      Enemy:advanceToNextEnemy(gGameStage)
+    end
+  elseif Player.lives < 1 then
+    -- TODO: game over
+  end
 end
 
 function checkAABBCollision(x1,y1,w1,h1, x2,y2,w2,h2)
