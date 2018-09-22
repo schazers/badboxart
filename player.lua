@@ -9,15 +9,25 @@ Player = {
   prevX = 0,
   prevY = 0,
   size = 0.2,
+  timeSinceTouchedBall = 1000,
 }
 
 function Player:reset()
   self.x = 0
   self.y = 0
+  self.timeSinceTouchedBall = 1000
 end
 
 function Player:draw(screenWidth, screenHeight)
-  love.graphics.setColor(1,1,1,0.5)
+  local baseAlpha = 0.38
+  local extraAlpha = 0
+  local kSecondsOfPaddleFade = 0.22
+  if self.timeSinceTouchedBall < kSecondsOfPaddleFade then 
+    extraAlpha = (baseAlpha - (baseAlpha * (self.timeSinceTouchedBall / kSecondsOfPaddleFade)))
+  end
+  local alpha = baseAlpha + extraAlpha
+
+  love.graphics.setColor(1,1,1,alpha)
   love.graphics.rectangle("fill", ((self.x + 1) / 2.0) * screenWidth - (self.size/2.0) * screenWidth,
                                   ((self.y + 1) / 2.0) * screenHeight - (self.size/2.0) * screenHeight, 
                                   screenWidth * self.size, 
@@ -41,10 +51,15 @@ end
 function Player:getMotionDelta() return { dx = self.dx, dy = self.dy } end
 
 function Player:update(dt)
-  -- TODO: slew paddle motion towards 0 slowly so there's a grace period for them to put spin.
-  -- otherwise they'll have to time it perfectly on the frame of the hit to get spin
+  -- TODO: grace period for spin (after ball leaves paddle, continue applying paddle motion to ball?)
   self.dx = self.x - self.prevX
   self.dy = self.y - self.prevY
+
+  self.timeSinceTouchedBall = self.timeSinceTouchedBall + dt
+end
+
+function Player:triggerHitBall()
+  self.timeSinceTouchedBall = 0
 end
 
 function Player:triggerLostPoint()

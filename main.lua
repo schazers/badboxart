@@ -67,6 +67,7 @@ function updateGame(dt)
       local p = Player:getAABB()
       if checkAABBCollision(b.x, b.y, b.w, b.h, p.x, p.y, p.w, p.h) then 
         Ball:handlePlayerTouch(Player:getMotionDelta())
+        Player:triggerHitBall()
         Sound:play(Sound.sndPlayerHit)
       else
         Ball:triggerLostPoint()

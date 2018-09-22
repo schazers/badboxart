@@ -1,4 +1,5 @@
 Sound = require 'sound'
+Player = require 'player'
 
 Ball = {
   radius = 0.05,
@@ -143,10 +144,12 @@ function Ball:handlePlayerTouch(motionDelta)
   local newZ = 0.0 + 0.01
   self.z = newZ
   if self.state == "ready" then
-    self.vz = 1.0
+    self.vz = 1.2
   elseif self.state == "playing" then 
     self.vz = -self.vz
   end
+
+  Player:triggerHitBall()
 end
 
 function Ball:handleEnemyTouch(motionDelta)
@@ -160,12 +163,14 @@ function Ball:triggerLostPoint()
   self.state = "lostpoint"
   self.timeSincePointEnded = 0
   self.z = 0 -- so the ball will render properly before reset
+  Sound:play(Sound.sndLosePoint)
 end
 
 function Ball:triggerWonPoint()
   self.state = "wonpoint"
   self.timeSincePointEnded = 0
-  self.z = 1.0 
+  self.z = 1.0
+  Sound:play(Sound.sndWinPoint)
 end
 
 function Ball:getPos() return { x = self.x, y = self.y, z = self.z } end
