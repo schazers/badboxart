@@ -18,7 +18,7 @@ gkBackWallScaleFactor = 0.25
 gGameStarted = false
 
 gGameStage = 1
-gkTotalNumStages = 2
+gkTotalNumStages = 3
 
 function love.load()
   math.randomseed(os.time())
