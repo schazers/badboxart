@@ -11,7 +11,8 @@ Enemy = {
   prevY = 0,
   size = 0.2,
   img = nil,
-  movementSpeed = 0.7
+  movementSpeed = 0.7,
+  lives = 10,
 }
 
 function Enemy:init()
@@ -80,8 +81,14 @@ function Enemy:triggerWonPoint()
   -- TODO
 end
 
+function Enemy:advanceToNextEnemy()
+  self.lives = 10
+  -- TODO: increase difficulty properly
+  self.movementSpeed = self.movementSpeed + 0.2
+end
+
 function Enemy:triggerLostPoint()
-  -- TODO
+  self.lives = self.lives - 1
 end
 
 return Enemy

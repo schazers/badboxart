@@ -10,6 +10,7 @@ Player = {
   prevY = 0,
   size = 0.2,
   timeSinceTouchedBall = 1000,
+  lives = 3,
 }
 
 function Player:reset()
@@ -72,7 +73,7 @@ function Player:triggerHitBall()
 end
 
 function Player:triggerLostPoint()
-  -- TODO: anything?
+  self.lives = self.lives - 1
 end
 
 function Player:triggerWonPoint()

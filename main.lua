@@ -17,6 +17,8 @@ gkBackWallScaleFactor = 0.25
 
 gGameStarted = false
 
+gGameStage = 1
+
 function love.load()
   math.randomseed(os.time())
 
@@ -125,7 +127,6 @@ function drawWallBallOutline()
   local botRightDiag = {  gScreenWidth, gScreenHeight, hw + hw * gkBackWallScaleFactor, hh + hh * gkBackWallScaleFactor, }
   local botLeftDiag = { 0, gScreenHeight, hw - hw * gkBackWallScaleFactor, hh + hh * gkBackWallScaleFactor, }
 
-
   -- outline on wall at ball's depth location
   local scaledZ = (Ball:getZ())^(2/3)
 
@@ -183,8 +184,27 @@ function love.draw()
 end
 
 function drawHUD()
-  -- progress bar
-  --love.graphics.setColor(1.0, 0.4, 0.4, 1.0)
+  -- Enemy lives
+  love.graphics.setColor(1.0, 0.4, 0.4, 1.0)
+  local padding = 10 
+  local radius = 8
+  local livesOffset = { x = gGameOffset.x + radius, y = gGameOffset.y - radius * 2 }
+
+  for i = 1, Enemy.lives do
+    love.graphics.circle("fill", livesOffset.x + (i-1) * padding + (i-1) * radius * 2,
+                                 livesOffset.y,
+                                 radius,  -- radius
+                                 50) -- cirle segments
+  end
+
+
+  love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
+  for i = 1, Player.lives do
+    love.graphics.circle("fill", gGameOffset.x + gScreenWidth - ((i-1) * (padding + radius*2)) - radius,
+                                 livesOffset.y,
+                                 radius,  -- radius
+                                 50) -- cirle segments
+  end
   
   -- Text
   --love.graphics.setColor(167.0/255.0, 131.0/255.0, 95.0/255.0, 1.0)
