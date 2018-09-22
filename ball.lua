@@ -123,8 +123,9 @@ end
 function Ball:handlePlayerTouch(motionDelta)
 
   -- simulate friction to slow spin amount
-  self.ax = 0.75 * self.ax
-  self.ay = 0.75 * self.ay
+  local friction = 0.5
+  self.ax = friction * self.ax
+  self.ay = friction * self.ay
 
   -- add spin
   local axDelta = - motionDelta.dx * 130
