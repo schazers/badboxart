@@ -157,11 +157,11 @@ end
 
 function Ball:advanceToStage(newGameStage)
   if newGameStage == 1 then
-    self.currStageVz = 1.2
-  elseif newGameStage == 2 then 
-    self.currStageVz = 1.5
+    self.currStageVz = 1.35
+  elseif newGameStage == 2 then
+    self.currStageVz = 1.6
   elseif newGameStage == 3 then
-    self.currStageVz = 1.8
+    self.currStageVz = 1.9
   end
 end
 

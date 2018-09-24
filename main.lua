@@ -16,6 +16,8 @@ gScreenHeight = 416
 gkBackWallScaleFactor = 0.25
 
 gGameStarted = false
+gGameOver = false
+gGameWon = false
 
 gGameStage = 1
 gkTotalNumStages = 3
@@ -23,33 +25,29 @@ gkTotalNumStages = 3
 function love.load()
   math.randomseed(os.time())
 
-  -- HiScore:load()
-
-  -- font
-  --gTheFont = love.graphics.newFont("8bitwonder.ttf", 18)
-
-  -- images
-  --gImgTitleScreen1 = love.graphics.newImage("title_screen_1.png")
-
+  gTheFont = love.graphics.newFont("assets/font/8bitwonder.TTF", 40)
   gImgBg = love.graphics.newImage("assets/img/bg.png")
 
   Enemy:init()
   Sound:init()
   Sound:play(Sound.sndAmbience)
-
-  Enemy:advanceToNextEnemy(gGameStage)
-  Ball:advanceToStage(gGameStage)
 end
 
 function startGame()
   Ball:reset()
   Player:reset()
+  Enemy:reset()
+  gGameStage = 1
+  Enemy:advanceToNextEnemy(gGameStage)
+  Ball:advanceToStage(gGameStage)
   gGameStarted = true
+  gGameOver = false
+  gGameWon = false
 end
 
 function love.update(dt)
   if not gGameStarted then
-    -- TODO
+    -- TODO: handle game over, game won, title screen updates
   else
     updateGame(dt)
   end
@@ -95,13 +93,15 @@ function updateGame(dt)
   if Enemy.lives < 1 then 
     gGameStage = gGameStage + 1
     if gGameStage > gkTotalNumStages then
-      -- TODO: won entire game
+      gGameStarted = false
+      gGameWon = true
     else 
       Enemy:advanceToNextEnemy(gGameStage)
       Ball:advanceToStage(gGameStage)
     end
   elseif Player.lives < 1 then
-    -- TODO: game over
+    gGameOver = true
+    gGameStarted = false
   end
 end
 
@@ -170,27 +170,37 @@ end
 
 function love.draw()
   -- call setFont only inside .draw or it will set Ghost's font
-  -- love.graphics.setFont(gTheFont)
-
-  if not gGameStarted then
-    -- title screen? hiscore?
-  end
+  love.graphics.setFont(gTheFont)
 
   love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
   love.graphics.draw(gImgBg, 0, 0)
 
-  love.graphics.push()
-  love.graphics.translate(gGameOffset.x, gGameOffset.y)
+  -- title screen? hiscore?
+  if not gGameStarted then
+    if gGameOver then
+      love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
+      love.graphics.print("GAME OVER", 234, 14)
+    elseif gGameWon then
+      love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
+      love.graphics.print("YOU ARE THE BEST", 134, 14)
+    else
+      love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
+      love.graphics.print("ROBO SQUASH", 200, 14)
+    end
+  else
+    love.graphics.push()
+    love.graphics.translate(gGameOffset.x, gGameOffset.y)
 
-  drawWallBallOutline()
+    drawWallBallOutline()
 
-  Enemy:draw(gScreenWidth, gScreenHeight)
-  Ball:draw(gScreenWidth, gScreenHeight)
-  Player:draw(gScreenWidth, gScreenHeight)
+    Enemy:draw(gScreenWidth, gScreenHeight)
+    Ball:draw(gScreenWidth, gScreenHeight)
+    Player:draw(gScreenWidth, gScreenHeight)
 
-  love.graphics.pop()
+    love.graphics.pop()
 
-  drawHUD()
+    drawHUD()
+  end
 end
 
 function drawHUD()
@@ -215,10 +225,6 @@ function drawHUD()
                                  radius,  -- radius
                                  50) -- cirle segments
   end
-  
-  -- Text
-  --love.graphics.setColor(167.0/255.0, 131.0/255.0, 95.0/255.0, 1.0)
-  --love.graphics.print("Trash      "..gTrashCleanedCount, 10, (gGridSize * gSquareW) + (gSquareW / 3) + 10)
 end
 
 function love.mousepressed(x, y, button)

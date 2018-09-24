@@ -16,6 +16,9 @@ Player = {
 function Player:reset()
   self.x = 0
   self.y = 0
+  self.prevX = 0
+  self.prevY = 0
+  self.lives = 3
   self.timeSinceTouchedBall = 1000
 end
 

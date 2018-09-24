@@ -77,29 +77,28 @@ function Enemy:getMotionDelta() return { dx = self.dx, dy = self.dy } end
 
 function Enemy:triggerWonPoint(gameStage)
   if gameStage == 1 then
-    self.movementSpeed = self.movementSpeed + 0.5
+    self.movementSpeed = self.movementSpeed + 0.6
   elseif gameStage == 2 then
     self.movementSpeed = self.movementSpeed + 0.3
   elseif gameStage == 3 then
-    self.movementSpeed = self.movementSpeed + 0.2
-  end 
+    self.movementSpeed = self.movementSpeed + 0.3
+  end
 end
 
 function Enemy:advanceToNextEnemy(newGameStage)
   if newGameStage == 1 then
-    self.movementSpeed = 0.9
-    self.lives = 3
+    self.img = love.graphics.newImage("assets/img/mouth.png")
+    self.movementSpeed = 1.0
+    self.lives = 6
   elseif newGameStage == 2 then
     self.img = love.graphics.newImage("assets/img/frogface.png")
-    self.movementSpeed = 1.6
-    self.lives = 3
+    self.movementSpeed = 1.9
+    self.lives = 8
   elseif newGameStage == 3 then
     self.img = love.graphics.newImage("assets/img/voidface.png")
-    self.movementSpeed = 2.0
-    self.lives = 3
-  end 
-  -- TODO: increase difficulty properly
-  
+    self.movementSpeed = 2.3
+    self.lives = 10
+  end
 end
 
 function Enemy:triggerLostPoint()
