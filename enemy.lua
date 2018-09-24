@@ -48,8 +48,8 @@ function Enemy:setCenterPos(centerX, centerY)
 end
 
 function Enemy:update(dt, ballPos, ballState)
-  -- TODO: move at this particular enemy's speed towards the ball each frame
-  -- compute (and set Dx, Dy to spin the ball?)
+  -- TODO: remove most of the spin from the ball?
+  -- curveball seems to do this..
 
   if ballState == "playing" then 
     local dx = ballPos.x - self.x
