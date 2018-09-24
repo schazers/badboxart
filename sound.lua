@@ -9,8 +9,8 @@ Sound = {
 
 function Sound:init()
   self.sndAmbience = love.audio.newSource("assets/audio/ambience.mp3", "static")
-  self.sndPlayerHit = love.audio.newSource("assets/audio/paddle.wav", "static")
-  self.sndEnemyHit = love.audio.newSource("assets/audio/paddle.wav", "static")
+  self.sndPlayerHit = love.audio.newSource("assets/audio/Paddle.wav", "static")
+  self.sndEnemyHit = love.audio.newSource("assets/audio/Paddle.wav", "static")
   self.sndBounce = love.audio.newSource("assets/audio/bounce.wav", "static")
   self.sndWinPoint = love.audio.newSource("assets/audio/winpoint.wav", "static")
   self.sndLosePoint = love.audio.newSource("assets/audio/losepoint.wav", "static")
