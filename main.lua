@@ -2,6 +2,8 @@ Ball = require 'ball'
 Player = require 'player'
 Enemy = require 'enemy'
 Sound = require 'sound'
+Wallquads = require 'wallquads'
+
 local lerp = require "math.lerp"
 local clamp = require "math.clamp"
 
@@ -28,6 +30,7 @@ function love.load()
   gTheFont = love.graphics.newFont("assets/font/8bitwonder.TTF", 40)
   gImgBg = love.graphics.newImage("assets/img/bg.png")
 
+  Wallquads:init()
   Enemy:init()
   Sound:init()
   Sound:play(Sound.sndAmbience)
@@ -58,6 +61,7 @@ function updateGame(dt)
   Player:update(dt)
   Ball:update(dt)
   Enemy:update(dt, Ball:getPos(), Ball:getState())
+  Wallquads:update(dt)
 
   if Ball:getState() == "ready" then 
     Enemy:reset()
@@ -174,6 +178,10 @@ function love.draw()
 
   love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
   love.graphics.draw(gImgBg, 0, 0)
+
+  Wallquads:draw()
+
+  love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 
   -- title screen? hiscore?
   if not gGameStarted then
