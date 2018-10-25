@@ -2,7 +2,10 @@
   -- example of concave polygon that we might want:
   -- {58, 417, 82, 409, 82, 452, 76, 454, 76, 419, 58, 424}
 
-Wallquads = {}
+Wallquads = {
+    spawnRate = 0.1,
+    justHitDur = 0.0,
+}
 
 local wallquadverts = {
     -- left wall
@@ -34,7 +37,7 @@ local wallquads = {}
 function createWallquad(verts)
     return {
         quad = verts,
-        lifetime = 1.0 -- TODO: randomize
+        lifetime = 1.0
     }
 end
 
@@ -55,16 +58,38 @@ function Wallquads:draw()
     end
 end
 
+function Wallquads:spawnLifetime(base, variance)
+    return base + (math.random() * variance)
+end
+
 function Wallquads:update(dt)
-    for k,wallquad in pairs(wallquads) do
-        if wallquad.lifetime > 0.0 then 
-            wallquad.lifetime = wallquad.lifetime - dt
-        elseif math.random() < 0.05 then 
-            wallquad.lifetime = 0.1 + (math.random() * 0.6)
-        end  
+
+    self.spawnRate = 0.05
+
+    local lifetimeBase = 0.1
+    local lifetimeVariance = 0.6
+
+    if self.justHitDur > 0.0 then
+        lifetimeBase = 0.04
+        lifetimeVariance = 0.04
+        self.spawnRate = 0.6
     end
 
-    -- TODO: spawn new wallquads
+    for k,wallquad in pairs(wallquads) do
+
+        if wallquad.lifetime > 0.0 then 
+            wallquad.lifetime = wallquad.lifetime - dt
+        elseif math.random() < self.spawnRate then 
+            -- spawn new ones
+            wallquad.lifetime = self:spawnLifetime(lifetimeBase, lifetimeVariance)
+        end
+    end
+
+    self.justHitDur = self.justHitDur - dt
+end
+
+function Wallquads:doJustHitEffect()
+    self.justHitDur = 0.22
 end
 
 return Wallquads

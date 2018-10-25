@@ -87,14 +87,12 @@ function updateGame(dt)
         Ball:handlePlayerTouch(Player:getMotionDelta())
         Player:triggerHitBall()
         Sound:play(Sound.sndPlayerHit)
-
+        Wallquads:doJustHitEffect()
         gCurrShake = newShake(math.random() * math.pi, 0.8, 0.06, 60)
-        
       else
         Ball:triggerLostPoint()
         Player:triggerLostPoint()
         Enemy:triggerWonPoint(gGameStage)
-
         gCurrShake = newShake(math.random() * math.pi, 5, 2.0, 20)
       end
     end
@@ -105,7 +103,6 @@ function updateGame(dt)
       if checkAABBCollision(b.x, b.y, b.w, b.h, e.x, e.y, e.w, e.h) then 
         Ball:handleEnemyTouch(Enemy:getMotionDelta())
         Sound:play(Sound.sndEnemyHit)
-
         gCurrShake = newShake(math.random() * math.pi, 3, 0.09, 40)
       else
         Ball:triggerWonPoint()
