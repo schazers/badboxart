@@ -7,6 +7,10 @@ Wallquads = require 'wallquads'
 local lerp = require "math.lerp"
 local clamp = require "math.clamp"
 
+local newShake = require "shake"
+
+local gCurrShake
+
 -- offset from top left of game window
 gGameOffset = {
   x = 100,
@@ -51,11 +55,17 @@ end
 function love.update(dt)
   if not gGameStarted then
     -- TODO: handle game over, game won, title screen updates
+    if gCurrShake then
+      gCurrShake:update(dt)
+    end
   else
     updateGame(dt)
   end
   
 end
+
+gk_screenShakeDur = 0.5
+gk_screenShakeTimeElapsed = 99999.0 -- sentinel
 
 function updateGame(dt)
   Player:update(dt)
@@ -63,20 +73,29 @@ function updateGame(dt)
   Enemy:update(dt, Ball:getPos(), Ball:getState())
   Wallquads:update(dt)
 
-  if Ball:getState() == "ready" then 
+  if gCurrShake then
+    gCurrShake:update(dt)
+  end
+
+  if Ball:getState() == "ready" then
     Enemy:reset()
   elseif Ball:getState() == "playing" then
     if Ball:getZ() < 0.0 then
       local b = Ball:getAABB()
       local p = Player:getAABB()
-      if checkAABBCollision(b.x, b.y, b.w, b.h, p.x, p.y, p.w, p.h) then 
+      if checkAABBCollision(b.x, b.y, b.w, b.h, p.x, p.y, p.w, p.h) then
         Ball:handlePlayerTouch(Player:getMotionDelta())
         Player:triggerHitBall()
         Sound:play(Sound.sndPlayerHit)
+
+        gCurrShake = newShake(math.random() * math.pi, 0.8, 0.06, 60)
+        
       else
         Ball:triggerLostPoint()
         Player:triggerLostPoint()
         Enemy:triggerWonPoint(gGameStage)
+
+        gCurrShake = newShake(math.random() * math.pi, 5, 2.0, 20)
       end
     end
   
@@ -86,6 +105,8 @@ function updateGame(dt)
       if checkAABBCollision(b.x, b.y, b.w, b.h, e.x, e.y, e.w, e.h) then 
         Ball:handleEnemyTouch(Enemy:getMotionDelta())
         Sound:play(Sound.sndEnemyHit)
+
+        gCurrShake = newShake(math.random() * math.pi, 3, 0.09, 40)
       else
         Ball:triggerWonPoint()
         Player:triggerWonPoint()
@@ -173,6 +194,12 @@ function drawWallBallOutline()
 end
 
 function love.draw()
+  local dx, dy = 0, 0
+  if gCurrShake then dx, dy = gCurrShake:get() end
+
+  love.graphics.push()
+  love.graphics.translate(dx, dy)
+
   -- call setFont only inside .draw or it will set Ghost's font
   love.graphics.setFont(gTheFont)
 
@@ -209,6 +236,8 @@ function love.draw()
 
     drawHUD()
   end
+
+  love.graphics.pop()
 end
 
 function drawHUD()
