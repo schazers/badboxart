@@ -46,7 +46,7 @@ function Wallquads:init()
 end
 
 function Wallquads:draw()
-    love.graphics.setColor(164.0/255.0, 71.0/255.0, 157.0/255.0, 1.0)
+    love.graphics.setColor(125.0/255.0, 90.0/255.0, 115.0/255.0, 1.0)
 
     for k,wallquad in pairs(wallquads) do
         if wallquad.lifetime > 0.0 then
