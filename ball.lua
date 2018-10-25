@@ -170,6 +170,10 @@ function Ball:handleEnemyTouch(motionDelta)
   local newZ = 1.0 - 0.01
   self.vz = -self.vz
   self.z = newZ
+
+  -- give enemy friction to slow down how much spin player put on it
+  self.ax = 0.6 * self.ax
+  self.ay = 0.6 * self.ay
 end
 
 function Ball:triggerLostPoint()
