@@ -74,7 +74,12 @@ end
 function Ball:update(dt)
   if self.state == "ready" then
     -- todo? wiggle ball?
-  elseif self.state == "wonpoint" or self.state == "lostpoint" then
+  elseif self.state == "wonpoint" then
+    self.timeSincePointEnded = self.timeSincePointEnded + dt
+    if self.timeSincePointEnded > 0.75 then
+      self:reset()
+    end
+  elseif self.state == "lostpoint" then
     self.timeSincePointEnded = self.timeSincePointEnded + dt
     if self.timeSincePointEnded > 1.4 then
       self:reset()
@@ -123,13 +128,13 @@ end
 function Ball:handlePlayerTouch(motionDelta)
 
   -- simulate friction to slow spin amount
-  local friction = 0.5
+  local friction = 0.6
   self.ax = friction * self.ax
   self.ay = friction * self.ay
 
   -- add spin
-  local axDelta = - motionDelta.dx * 130
-  local ayDelta = - motionDelta.dy * 130
+  local axDelta = - motionDelta.dx * 160
+  local ayDelta = - motionDelta.dy * 160
 
   -- reverse ball's spin if new spin is in other direction
   if (axDelta < 0 and self.ax > 0) or (axDelta > 0 and self.ax < 0) then
