@@ -5,6 +5,7 @@
 Wallquads = {
     spawnRate = 0.1,
     justHitDur = 0.0,
+    color = { r = 125.0/255.0, g = 90.0/255.0, b = 115.0/255.0 }
 }
 
 local wallquadverts = {
@@ -49,7 +50,7 @@ function Wallquads:init()
 end
 
 function Wallquads:draw()
-    love.graphics.setColor(125.0/255.0, 90.0/255.0, 115.0/255.0, 1.0)
+    love.graphics.setColor(self.color.r, self.color.g, self.color.b, 1.0)
 
     for k,wallquad in pairs(wallquads) do
         if wallquad.lifetime > 0.0 then
@@ -66,6 +67,8 @@ function Wallquads:update(dt)
 
     self.spawnRate = 0.01
 
+    self.color = { r = 125.0/255.0, g = 90.0/255.0, b = 115.0/255.0 }
+
     local lifetimeBase = 0.7
     local lifetimeVariance = 2.5
 
@@ -73,6 +76,9 @@ function Wallquads:update(dt)
         lifetimeBase = 0.04
         lifetimeVariance = 0.04
         self.spawnRate = 0.6
+        self.color.r = self.color.r * 1.25
+        self.color.g = self.color.g * 1.25
+        self.color.b = self.color.b * 1.25
     end
 
     for k,wallquad in pairs(wallquads) do
