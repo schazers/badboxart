@@ -103,6 +103,7 @@ function updateGame(dt)
       if checkAABBCollision(b.x, b.y, b.w, b.h, e.x, e.y, e.w, e.h) then 
         Ball:handleEnemyTouch(Enemy:getMotionDelta())
         Sound:play(Sound.sndEnemyHit)
+        Wallquads:doJustHitEffect()
         gCurrShake = newShake(math.random() * math.pi, 3, 0.09, 40)
       else
         Ball:triggerWonPoint()
