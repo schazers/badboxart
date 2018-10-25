@@ -25,11 +25,21 @@ end
 function Player:draw(screenWidth, screenHeight)
   local baseAlpha = 0.38
   local extraAlpha = 0
+  local extraSize = 0
+
+  -- fade the paddle on hit
   local kSecondsOfPaddleFade = 0.22
   if self.timeSinceTouchedBall < kSecondsOfPaddleFade then 
     extraAlpha = (baseAlpha - (baseAlpha * (self.timeSinceTouchedBall / kSecondsOfPaddleFade)))
   end
   local alpha = baseAlpha + extraAlpha
+
+  -- largen the paddle on hit
+  local kSecondsOfPaddleLargen = 0.16
+  if self.timeSinceTouchedBall < kSecondsOfPaddleLargen then 
+    extraSize = 0.040 * (1.0 - (self.timeSinceTouchedBall / kSecondsOfPaddleLargen))
+  end 
+  self.size = 0.2 + extraSize
 
   love.graphics.setColor(1,1,1,alpha)
   love.graphics.rectangle("fill", ((self.x + 1) / 2.0) * screenWidth - (self.size/2.0) * screenWidth,
@@ -43,7 +53,7 @@ function Player:draw(screenWidth, screenHeight)
   love.graphics.setColor(1,1,1,1)
   love.graphics.rectangle("line", ((self.x + 1) / 2.0) * screenWidth - (self.size/2.0) * screenWidth,
                                   ((self.y + 1) / 2.0) * screenHeight - (self.size/2.0) * screenHeight, 
-                                  screenWidth * self.size, 
+                                  screenWidth * self.size,
                                   screenHeight * self.size,
                                   self.size * screenWidth * 0.1,
                                   self.size * screenHeight * 0.1,
