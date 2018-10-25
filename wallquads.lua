@@ -64,10 +64,10 @@ end
 
 function Wallquads:update(dt)
 
-    self.spawnRate = 0.05
+    self.spawnRate = 0.01
 
-    local lifetimeBase = 0.1
-    local lifetimeVariance = 0.6
+    local lifetimeBase = 0.7
+    local lifetimeVariance = 2.5
 
     if self.justHitDur > 0.0 then
         lifetimeBase = 0.04
@@ -89,7 +89,7 @@ function Wallquads:update(dt)
 end
 
 function Wallquads:doJustHitEffect()
-    self.justHitDur = 0.22
+    self.justHitDur = 0.14
 end
 
 return Wallquads
