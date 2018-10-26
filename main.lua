@@ -198,9 +198,9 @@ end
 function love.draw()
 
   love.graphics.push() -- center screen
-  local translateScreenToCenterDx = 0.5 * (love.graphics.getWidth() - SCREEN_WIDTH)
-  local translateScreenToCenterDy = 0.5 * (love.graphics.getHeight() - SCREEN_HEIGHT)
-  love.graphics.translate(translateScreenToCenterDx, translateScreenToCenterDy)
+  gTranslateScreenToCenterDx = 0.5 * (love.graphics.getWidth() - SCREEN_WIDTH)
+  gTranslateScreenToCenterDy = 0.5 * (love.graphics.getHeight() - SCREEN_HEIGHT)
+  love.graphics.translate(gTranslateScreenToCenterDx, gTranslateScreenToCenterDy)
 
 
   local screenShakeDx, screenShakeDy = 0, 0
@@ -286,8 +286,8 @@ function love.mousepressed(x, y, button)
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
-  local screenX = clamp(x - gGameOffset.x, 0, gGameWidth)
-  local screenY = clamp(y - gGameOffset.y, 0, gGameHeight)
+  local screenX = clamp(x - gGameOffset.x - gTranslateScreenToCenterDx, 0, gGameWidth)
+  local screenY = clamp(y - gGameOffset.y - gTranslateScreenToCenterDy, 0, gGameHeight)
   local worldX = (screenX / gGameWidth) * 2.0 - 1.0
   local worldY = (screenY / gGameHeight) * 2.0 - 1.0
   Player:setCenterPos(worldX, worldY) 
