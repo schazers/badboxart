@@ -17,8 +17,12 @@ gGameOffset = {
   y = 100
 }
 
-gScreenWidth = 624
-gScreenHeight = 416
+gGameWidth = 624
+gGameHeight = 416
+
+SCREEN_WIDTH = (gGameOffset.x * 2) + gGameWidth
+SCREEN_HEIGHT = gGameOffset.y + gGameHeight + 200
+
 gkBackWallScaleFactor = 0.25
 
 gGameStarted = false
@@ -138,14 +142,14 @@ end
 function drawWallBallOutline()
   local frontCorners = {
     0, 0,
-    gScreenWidth, 0,
-    gScreenWidth, gScreenHeight,
-    0, gScreenHeight,
+    gGameWidth, 0,
+    gGameWidth, gGameHeight,
+    0, gGameHeight,
     0, 0
   }
 
-  local hw = gScreenWidth / 2.0
-  local hh = gScreenHeight / 2.0
+  local hw = gGameWidth / 2.0
+  local hh = gGameHeight / 2.0
 
   local backCorners = {
     hw - hw * gkBackWallScaleFactor, hh - hh * gkBackWallScaleFactor,
@@ -156,17 +160,17 @@ function drawWallBallOutline()
   }
 
   local topLeftDiag = { 0,0, hw - hw * gkBackWallScaleFactor, hh - hh * gkBackWallScaleFactor }
-  local topRightDiag = { gScreenWidth, 0, hw + hw * gkBackWallScaleFactor, hh - hh * gkBackWallScaleFactor, }
-  local botRightDiag = {  gScreenWidth, gScreenHeight, hw + hw * gkBackWallScaleFactor, hh + hh * gkBackWallScaleFactor, }
-  local botLeftDiag = { 0, gScreenHeight, hw - hw * gkBackWallScaleFactor, hh + hh * gkBackWallScaleFactor, }
+  local topRightDiag = { gGameWidth, 0, hw + hw * gkBackWallScaleFactor, hh - hh * gkBackWallScaleFactor, }
+  local botRightDiag = {  gGameWidth, gGameHeight, hw + hw * gkBackWallScaleFactor, hh + hh * gkBackWallScaleFactor, }
+  local botLeftDiag = { 0, gGameHeight, hw - hw * gkBackWallScaleFactor, hh + hh * gkBackWallScaleFactor, }
 
   -- outline on wall at ball's depth location
   local scaledZ = (Ball:getZ())^(2/3)
 
   local outlineLeft = lerp(0, hw - hw * gkBackWallScaleFactor, scaledZ)
   local outlineTop = lerp(0, hh - hh * gkBackWallScaleFactor, scaledZ)
-  local outlineRight = lerp(gScreenWidth, hw + hw * gkBackWallScaleFactor, scaledZ)
-  local outlineBottom = lerp(gScreenHeight, hh + hh * gkBackWallScaleFactor, scaledZ)
+  local outlineRight = lerp(gGameWidth, hw + hw * gkBackWallScaleFactor, scaledZ)
+  local outlineBottom = lerp(gGameHeight, hh + hh * gkBackWallScaleFactor, scaledZ)
 
   local outlineCorners = {
     outlineLeft, outlineTop,
@@ -192,11 +196,18 @@ function drawWallBallOutline()
 end
 
 function love.draw()
-  local dx, dy = 0, 0
-  if gCurrShake then dx, dy = gCurrShake:get() end
 
-  love.graphics.push()
-  love.graphics.translate(dx, dy)
+  love.graphics.push() -- center screen
+  local translateScreenToCenterDx = 0.5 * (love.graphics.getWidth() - SCREEN_WIDTH)
+  local translateScreenToCenterDy = 0.5 * (love.graphics.getHeight() - SCREEN_HEIGHT)
+  love.graphics.translate(translateScreenToCenterDx, translateScreenToCenterDy)
+
+
+  local screenShakeDx, screenShakeDy = 0, 0
+  if gCurrShake then screenShakeDx, screenShakeDy = gCurrShake:get() end
+
+  love.graphics.push() -- screen shake
+  love.graphics.translate(screenShakeDx, screenShakeDy)
 
   -- call setFont only inside .draw or it will set Ghost's font
   love.graphics.setFont(gTheFont)
@@ -226,16 +237,17 @@ function love.draw()
 
     drawWallBallOutline()
 
-    Enemy:draw(gScreenWidth, gScreenHeight)
-    Ball:draw(gScreenWidth, gScreenHeight)
-    Player:draw(gScreenWidth, gScreenHeight)
+    Enemy:draw(gGameWidth, gGameHeight)
+    Ball:draw(gGameWidth, gGameHeight)
+    Player:draw(gGameWidth, gGameHeight)
 
     love.graphics.pop()
 
     drawHUD()
   end
 
-  love.graphics.pop()
+  love.graphics.pop() -- screen shake
+  love.graphics.pop() -- center screen 
 end
 
 function drawHUD()
@@ -255,7 +267,7 @@ function drawHUD()
 
   love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
   for i = 1, Player.lives do
-    love.graphics.circle("fill", gGameOffset.x + gScreenWidth - ((i-1) * (padding + radius*2)) - radius,
+    love.graphics.circle("fill", gGameOffset.x + gGameWidth - ((i-1) * (padding + radius*2)) - radius,
                                  livesOffset.y,
                                  radius,  -- radius
                                  50) -- cirle segments
@@ -274,10 +286,10 @@ function love.mousepressed(x, y, button)
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
-  local screenX = clamp(x - gGameOffset.x, 0, gScreenWidth)
-  local screenY = clamp(y - gGameOffset.y, 0, gScreenHeight)
-  local worldX = (screenX / gScreenWidth) * 2.0 - 1.0
-  local worldY = (screenY / gScreenHeight) * 2.0 - 1.0
+  local screenX = clamp(x - gGameOffset.x, 0, gGameWidth)
+  local screenY = clamp(y - gGameOffset.y, 0, gGameHeight)
+  local worldX = (screenX / gGameWidth) * 2.0 - 1.0
+  local worldY = (screenY / gGameHeight) * 2.0 - 1.0
   Player:setCenterPos(worldX, worldY) 
 end
 
