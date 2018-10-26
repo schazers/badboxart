@@ -128,13 +128,13 @@ end
 function Ball:handlePlayerTouch(motionDelta)
 
   -- simulate friction to slow spin amount
-  local friction = 0.6
+  local friction = 0.5
   self.ax = friction * self.ax
   self.ay = friction * self.ay
 
   -- add spin
-  local axDelta = - motionDelta.dx * 145
-  local ayDelta = - motionDelta.dy * 145
+  local axDelta = - motionDelta.dx * 130
+  local ayDelta = - motionDelta.dy * 130
 
   -- reverse ball's spin if new spin is in other direction
   if (axDelta < 0 and self.ax > 0) or (axDelta > 0 and self.ax < 0) then
