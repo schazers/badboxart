@@ -11,12 +11,18 @@ Enemy = {
   prevY = 0,
   size = 0.2,
   img = nil,
+  imgEnemy1 = nil,
+  imgEnemy2 = nil,
+  imgEnemy3 = nil,
   movementSpeed = 0.7,
   lives = 10,
 }
 
 function Enemy:init()
-  self.img = love.graphics.newImage("assets/img/mouth.png")
+  self.imgEnemy1 = love.graphics.newImage("assets/img/mouth.png")
+  self.imgEnemy2 = love.graphics.newImage("assets/img/frogface.png")
+  self.imgEnemy3 = love.graphics.newImage("assets/img/voidface.png")
+  self.img = self.imgEnemy1
 end
 
 function Enemy:reset()
@@ -87,15 +93,15 @@ end
 
 function Enemy:advanceToNextEnemy(newGameStage)
   if newGameStage == 1 then
-    self.img = love.graphics.newImage("assets/img/mouth.png")
+    self.img = self.imgEnemy1
     self.movementSpeed = 1.0
     self.lives = 6
   elseif newGameStage == 2 then
-    self.img = love.graphics.newImage("assets/img/frogface.png")
+    self.img = self.imgEnemy2
     self.movementSpeed = 1.9
     self.lives = 8
   elseif newGameStage == 3 then
-    self.img = love.graphics.newImage("assets/img/voidface.png")
+    self.img = self.imgEnemy3
     self.movementSpeed = 2.3
     self.lives = 10
   end
