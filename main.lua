@@ -65,6 +65,8 @@ function love.update(dt)
   else
     updateGame(dt)
   end
+
+  Wallquads:update(dt)
   
 end
 
@@ -75,7 +77,6 @@ function updateGame(dt)
   Player:update(dt)
   Ball:update(dt)
   Enemy:update(dt, Ball:getPos(), Ball:getState())
-  Wallquads:update(dt)
 
   if gCurrShake then
     gCurrShake:update(dt)
@@ -196,12 +197,10 @@ function drawWallBallOutline()
 end
 
 function love.draw()
-
   love.graphics.push() -- center screen
   gTranslateScreenToCenterDx = 0.5 * (love.graphics.getWidth() - SCREEN_WIDTH)
   gTranslateScreenToCenterDy = 0.5 * (love.graphics.getHeight() - SCREEN_HEIGHT)
   love.graphics.translate(gTranslateScreenToCenterDx, gTranslateScreenToCenterDy)
-
 
   local screenShakeDx, screenShakeDy = 0, 0
   if gCurrShake then screenShakeDx, screenShakeDy = gCurrShake:get() end
@@ -224,9 +223,19 @@ function love.draw()
     if gGameOver then
       love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
       love.graphics.print("GAME OVER", 234, 14)
+      love.graphics.push()
+      love.graphics.translate(gGameOffset.x, gGameOffset.y)
+      Ball:draw(gGameWidth, gGameHeight)
+      Player:draw(gGameWidth, gGameHeight, screenShakeDx, screenShakeDy)
+      love.graphics.pop()
     elseif gGameWon then
       love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
       love.graphics.print("YOU ARE THE BEST", 134, 14)
+      love.graphics.push()
+      love.graphics.translate(gGameOffset.x, gGameOffset.y)
+      Ball:draw(gGameWidth, gGameHeight)
+      Player:draw(gGameWidth, gGameHeight, screenShakeDx, screenShakeDy)
+      love.graphics.pop()
     else
       love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
       love.graphics.print("ROBO SQUASH", 200, 14)
@@ -239,7 +248,7 @@ function love.draw()
 
     Enemy:draw(gGameWidth, gGameHeight)
     Ball:draw(gGameWidth, gGameHeight)
-    Player:draw(gGameWidth, gGameHeight)
+    Player:draw(gGameWidth, gGameHeight, screenShakeDx, screenShakeDy)
 
     love.graphics.pop()
 

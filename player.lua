@@ -22,7 +22,10 @@ function Player:reset()
   self.timeSinceTouchedBall = 1000
 end
 
-function Player:draw(screenWidth, screenHeight)
+function Player:draw(screenWidth, screenHeight, screenShakeDx, screenShakeDy)
+  love.graphics.push()
+  love.graphics.translate(-screenShakeDx, -screenShakeDy)
+
   local baseAlpha = 0.38
   local extraAlpha = 0
   local extraSize = 0
@@ -58,6 +61,8 @@ function Player:draw(screenWidth, screenHeight)
                                   self.size * screenWidth * 0.1,
                                   self.size * screenHeight * 0.1,
                                   20)
+
+  love.graphics.pop()
 end
 
 function Player:getAABB()
