@@ -3,6 +3,7 @@ Player = require 'player'
 Enemy = require 'enemy'
 Sound = require 'sound'
 Wallquads = require 'wallquads'
+Console = require 'console'
 
 local lerp = require "math.lerp"
 local clamp = require "math.clamp"
@@ -39,6 +40,7 @@ function love.load()
   gImgBg = love.graphics.newImage("assets/img/bg.png")
 
   Wallquads:init()
+  Console:init()
   Enemy:init()
   Sound:init()
   Sound:play(Sound.sndAmbience)
@@ -67,6 +69,7 @@ function love.update(dt)
   end
 
   Wallquads:update(dt)
+  Console:update(dt)
   
 end
 
@@ -93,6 +96,7 @@ function updateGame(dt)
         Player:triggerHitBall()
         Sound:play(Sound.sndPlayerHit)
         Wallquads:doJustHitEffect()
+        Console:doPlayerJustHitEffect()
         gCurrShake = newShake(math.random() * math.pi, 0.8, 0.06, 60)
       else
         Ball:triggerLostPoint()
@@ -215,6 +219,7 @@ function love.draw()
   love.graphics.draw(gImgBg, 0, 0)
 
   Wallquads:draw()
+  Console:draw()
 
   love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 
