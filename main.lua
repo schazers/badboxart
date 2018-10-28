@@ -222,7 +222,7 @@ function love.draw()
   if not gGameStarted then
     if gGameOver then
       love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
-      love.graphics.print("GAME OVER", 234, 14)
+      love.graphics.print("GAME OVER", 234, 24)
       love.graphics.push()
       love.graphics.translate(gGameOffset.x, gGameOffset.y)
       Ball:draw(gGameWidth, gGameHeight)
@@ -230,7 +230,7 @@ function love.draw()
       love.graphics.pop()
     elseif gGameWon then
       love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
-      love.graphics.print("YOU ARE THE BEST", 134, 14)
+      love.graphics.print("YOU ARE THE BEST", 134, 24)
       love.graphics.push()
       love.graphics.translate(gGameOffset.x, gGameOffset.y)
       Ball:draw(gGameWidth, gGameHeight)
@@ -238,7 +238,7 @@ function love.draw()
       love.graphics.pop()
     else
       love.graphics.setColor(0.5, 1.0, 0.4, 1.0)
-      love.graphics.print("ROBO SQUASH", 200, 14)
+      love.graphics.print("ROBOPONG", 256, 24)
     end
   else
     love.graphics.push()
