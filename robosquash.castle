@@ -2,5 +2,5 @@
 main: main.lua
 name: Robosquash
 username: schazers
-coverImageUrl: https://raw.githubusercontent.com/schazers/badboxart/master/robosquash.png
+coverImage: robosquash.png
 description: Destroy all robots! >:[
