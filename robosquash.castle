@@ -2,5 +2,6 @@
 main: main.lua
 name: Robosquash
 username: schazers
+primaryColor: C990BC
 coverImage: robosquash.png
 description: Destroy all robots! >:[
